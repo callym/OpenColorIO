@@ -11,9 +11,9 @@
 # Targets defined by this module:
 #   pystring::pystring - IMPORTED target, if found
 #
-# If pystring is not installed in a standard path, you can use the 
-# pystring_ROOT variable to tell CMake where to find it. If it is not found 
-# and OCIO_INSTALL_EXT_PACKAGES is set to MISSING or ALL, pystring will be 
+# If pystring is not installed in a standard path, you can use the
+# pystring_ROOT variable to tell CMake where to find it. If it is not found
+# and OCIO_INSTALL_EXT_PACKAGES is set to MISSING or ALL, pystring will be
 # downloaded, built, and statically-linked into libOpenColorIO at build time.
 #
 
@@ -56,8 +56,8 @@ if(NOT OCIO_INSTALL_EXT_PACKAGES STREQUAL ALL)
 
     include(FindPackageHandleStandardArgs)
     find_package_handle_standard_args(pystring
-        REQUIRED_VARS 
-            pystring_INCLUDE_DIR 
+        REQUIRED_VARS
+            pystring_INCLUDE_DIR
             pystring_LIBRARY
     )
     set(pystring_FOUND ${pystring_FOUND})
@@ -77,7 +77,7 @@ if(NOT pystring_FOUND AND OCIO_INSTALL_EXT_PACKAGES AND NOT OCIO_INSTALL_EXT_PAC
     set(pystring_VERSION ${pystring_FIND_VERSION})
     set(pystring_INCLUDE_DIR "${_EXT_DIST_ROOT}/${CMAKE_INSTALL_INCLUDEDIR}")
 
-    set(pystring_LIBRARY 
+    set(pystring_LIBRARY
         "${_EXT_DIST_ROOT}/${CMAKE_INSTALL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}pystring${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
     if(_pystring_TARGET_CREATE)
@@ -141,7 +141,7 @@ if(NOT pystring_FOUND AND OCIO_INSTALL_EXT_PACKAGES AND NOT OCIO_INSTALL_EXT_PAC
             EXCLUDE_FROM_ALL TRUE
             PATCH_COMMAND
                 ${CMAKE_COMMAND} -E copy
-                "${CMAKE_SOURCE_DIR}/share/cmake/projects/Buildpystring.cmake"
+                "${OCIO_SOURCE_DIR}/share/cmake/projects/Buildpystring.cmake"
                 "CMakeLists.txt"
             BUILD_COMMAND ""
             INSTALL_COMMAND

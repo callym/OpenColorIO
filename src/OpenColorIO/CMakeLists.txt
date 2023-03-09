@@ -215,7 +215,7 @@ if(BUILD_SHARED_LIBS AND WIN32)
 endif()
 
 
-set(HEADER_LOCATION "${CMAKE_SOURCE_DIR}/include/OpenColorIO")
+set(HEADER_LOCATION "${OCIO_SOURCE_DIR}/include/OpenColorIO")
 file(GLOB_RECURSE INSTALL_HEADERS "${HEADER_LOCATION}/*.h")
 
 # Some part of the build process expect to find the ABI header here,
@@ -246,7 +246,7 @@ foreach(C ${CONFIGS_PATHS})
 
     # Append 0x00 to null-terminated the string.
     string(APPEND FORMATTED_HEX ",0x00")
-    
+
     # Set the dynamically named variable "${CONFIG_NAME}" to the config in HEX.
     set(${CONFIG_NAME} ${FORMATTED_HEX})
 endforeach()
@@ -376,20 +376,20 @@ elseif(APPLE)
         set(_minizip-ng_NAME "minizip")
     elseif(minizip-ng_LIBRARY)
         get_filename_component(_minizip-ng_LIBDIR "${minizip-ng_LIBRARY}" DIRECTORY)
-        set(_minizip-ng_NAME "minizip-ng")        
+        set(_minizip-ng_NAME "minizip-ng")
     endif()
 
     if (_minizip-ng_LIBDIR)
         # Add the path to CMake list of search paths for libraries.
         list(APPEND _OCIO_LINK_FLAGS_LIST_ "-Wl,-L${_minizip-ng_LIBDIR}")
         # Hide the minizip-ng symbols.
-        list(APPEND _OCIO_LINK_FLAGS_LIST_ "-Wl,-hidden-l${_minizip-ng_NAME}") 
-    endif()   
+        list(APPEND _OCIO_LINK_FLAGS_LIST_ "-Wl,-hidden-l${_minizip-ng_NAME}")
+    endif()
 
     if (_OCIO_LINK_FLAGS_LIST_)
         list(JOIN _OCIO_LINK_FLAGS_LIST_ ";" _OCIO_LINK_FLAGS_LIST_)
         set(CUSTOM_LINK_FLAGS "${CUSTOM_LINK_FLAGS};${_OCIO_LINK_FLAGS_LIST_}")
-    endif()              
+    endif()
 endif()
 
 set_target_properties(OpenColorIO PROPERTIES

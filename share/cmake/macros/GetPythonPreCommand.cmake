@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the OpenColorIO Project.
 #
-# Build a Python_EXECUTABLE pre-command which temporarily modifies PATH and 
-# PYTHONPATH with the OCIO Python environment and any additionally provided 
+# Build a Python_EXECUTABLE pre-command which temporarily modifies PATH and
+# PYTHONPATH with the OCIO Python environment and any additionally provided
 # paths containing Python packages.
 #
 # Variables defined by this module:
@@ -41,9 +41,9 @@ macro(get_python_pre_command)
         endif()
 
         # Build path list
-        set(_WIN_PATHS 
-            ${_PYD_PATH} 
-            "${CMAKE_SOURCE_DIR}\\share\\docs"
+        set(_WIN_PATHS
+            ${_PYD_PATH}
+            "${OCIO_SOURCE_DIR}\\share\\docs"
         )
         # Include optional paths from macro arguments
         foreach(_PATH ${ARGN})
@@ -64,9 +64,9 @@ macro(get_python_pre_command)
 
     else()
         # Build path list
-        set(_PATHS 
-            "${CMAKE_BINARY_DIR}/src/bindings/python" 
-            "${CMAKE_SOURCE_DIR}/share/docs"
+        set(_PATHS
+            "${CMAKE_BINARY_DIR}/src/bindings/python"
+            "${OCIO_SOURCE_DIR}/share/docs"
         )
         foreach(_PATH ${ARGN})
             list(APPEND _PATHS ${_PATH})

@@ -12,13 +12,13 @@
 # Targets defined by this module:
 #   lcms2::lcms2 - IMPORTED target, if found
 #
-# By default, the dynamic libraries of lcms2 will be found. To find the static 
-# ones instead, you must set the lcms2_STATIC_LIBRARY variable to TRUE 
+# By default, the dynamic libraries of lcms2 will be found. To find the static
+# ones instead, you must set the lcms2_STATIC_LIBRARY variable to TRUE
 # before calling find_package(lcms2 ...).
 #
-# If lcms2 is not installed in a standard path, you can use the lcms2_ROOT 
-# variable to tell CMake where to find it. If it is not found and 
-# OCIO_INSTALL_EXT_PACKAGES is set to MISSING or ALL, lcms2 will be 
+# If lcms2 is not installed in a standard path, you can use the lcms2_ROOT
+# variable to tell CMake where to find it. If it is not found and
+# OCIO_INSTALL_EXT_PACKAGES is set to MISSING or ALL, lcms2 will be
 # downloaded, built, and statically-linked into libOpenColorIO at build time.
 #
 
@@ -69,10 +69,10 @@ if(NOT OCIO_INSTALL_EXT_PACKAGES STREQUAL ALL)
 
     # Get version from config or header file
     if(lcms2_INCLUDE_DIR AND EXISTS "${lcms2_INCLUDE_DIR}/lcms2.h")
-        file(STRINGS "${lcms2_INCLUDE_DIR}/lcms2.h" _lcms2_VER_SEARCH 
+        file(STRINGS "${lcms2_INCLUDE_DIR}/lcms2.h" _lcms2_VER_SEARCH
             REGEX "^[ \t]*//[ \t]+Version[ \t]+[.0-9]+.*$")
         if(_lcms2_VER_SEARCH)
-            string(REGEX REPLACE ".*//[ \t]+Version[ \t]+([.0-9]+).*" 
+            string(REGEX REPLACE ".*//[ \t]+Version[ \t]+([.0-9]+).*"
                 "\\1" lcms2_VERSION "${_lcms2_VER_SEARCH}")
         endif()
     elseif(PC_lcms2_FOUND)
@@ -86,9 +86,9 @@ if(NOT OCIO_INSTALL_EXT_PACKAGES STREQUAL ALL)
 
     include(FindPackageHandleStandardArgs)
     find_package_handle_standard_args(lcms2
-        REQUIRED_VARS 
-            lcms2_INCLUDE_DIR 
-            lcms2_LIBRARY 
+        REQUIRED_VARS
+            lcms2_INCLUDE_DIR
+            lcms2_LIBRARY
         VERSION_VAR
             lcms2_VERSION
     )
@@ -107,7 +107,7 @@ if(NOT lcms2_FOUND AND OCIO_INSTALL_EXT_PACKAGES AND NOT OCIO_INSTALL_EXT_PACKAG
     set(lcms2_FOUND TRUE)
     set(lcms2_VERSION ${lcms2_FIND_VERSION})
     set(lcms2_INCLUDE_DIR "${_EXT_DIST_ROOT}/${CMAKE_INSTALL_INCLUDEDIR}/lcms2")
-    set(lcms2_LIBRARY 
+    set(lcms2_LIBRARY
         "${_EXT_DIST_ROOT}/${CMAKE_INSTALL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}lcms2${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
     if(_lcms2_TARGET_CREATE)
@@ -121,7 +121,7 @@ if(NOT lcms2_FOUND AND OCIO_INSTALL_EXT_PACKAGES AND NOT OCIO_INSTALL_EXT_PACKAG
 
         string(STRIP "${lcms2_C_FLAGS}" lcms2_C_FLAGS)
 
-        # NOTE: Depending of the compiler version lcm2 2.2 does not compile with C++17 so revert 
+        # NOTE: Depending of the compiler version lcm2 2.2 does not compile with C++17 so revert
         # to C++11 because the library is only used by a cmd line tool.
 
         set(lcms2_CXX_STANDARD ${CMAKE_CXX_STANDARD})
@@ -180,7 +180,7 @@ if(NOT lcms2_FOUND AND OCIO_INSTALL_EXT_PACKAGES AND NOT OCIO_INSTALL_EXT_PACKAG
             EXCLUDE_FROM_ALL TRUE
             PATCH_COMMAND
                 ${CMAKE_COMMAND} -E copy
-                "${CMAKE_SOURCE_DIR}/share/cmake/projects/Buildlcms2.cmake"
+                "${OCIO_SOURCE_DIR}/share/cmake/projects/Buildlcms2.cmake"
                 "CMakeLists.txt"
             BUILD_COMMAND ""
             INSTALL_COMMAND

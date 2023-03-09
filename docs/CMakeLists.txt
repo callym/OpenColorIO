@@ -45,7 +45,7 @@ if(${Python_VERSION_MAJOR} GREATER_EQUAL 3)
     # Breathe
     # https://pypi.org/project/breathe/
     find_python_package(breathe REQUIRED)
-    
+
     ###########################################################################
     ### Setup PYTHONPATH ###
 
@@ -57,31 +57,31 @@ if(${Python_VERSION_MAJOR} GREATER_EQUAL 3)
     ###########################################################################
     ### Copy templates to build area ###
 
-    # Find and configure all *.in files in documentation. conf.py needs 
+    # Find and configure all *.in files in documentation. conf.py needs
     # configuration, but omits *.in to work in RTD builds.
     message(STATUS "Substitute documentation variables")
-    file(GLOB_RECURSE DOC_IN_FILES 
-        "${CMAKE_SOURCE_DIR}/docs/**.in"
-        "${CMAKE_SOURCE_DIR}/docs/conf.py"
+    file(GLOB_RECURSE DOC_IN_FILES
+        "${OCIO_SOURCE_DIR}/docs/**.in"
+        "${OCIO_SOURCE_DIR}/docs/conf.py"
     )
     foreach(in_file ${DOC_IN_FILES})
-        string(REPLACE "${CMAKE_SOURCE_DIR}/" "${CMAKE_BINARY_DIR}/" 
+        string(REPLACE "${OCIO_SOURCE_DIR}/" "${CMAKE_BINARY_DIR}/"
             out_file ${in_file})
-        string(REPLACE ".in" "" 
+        string(REPLACE ".in" ""
             out_file ${out_file})
         configure_file(${in_file} ${out_file} @ONLY)
     endforeach()
 
     # Copy documentation source to build location
-    file(GLOB_RECURSE DOC_SOURCES "${CMAKE_SOURCE_DIR}/docs/*")
+    file(GLOB_RECURSE DOC_SOURCES "${OCIO_SOURCE_DIR}/docs/*")
     list(APPEND DOC_SOURCES
-        ${CMAKE_SOURCE_DIR}/README.md
-        ${CMAKE_SOURCE_DIR}/INSTALL.md
-        ${CMAKE_SOURCE_DIR}/CHANGELOG.md
-        ${CMAKE_SOURCE_DIR}/LICENSE
+        ${OCIO_SOURCE_DIR}/README.md
+        ${OCIO_SOURCE_DIR}/INSTALL.md
+        ${OCIO_SOURCE_DIR}/CHANGELOG.md
+        ${OCIO_SOURCE_DIR}/LICENSE
     )
     if(OCIO_BUILD_NUKE)
-        list(APPEND DOC_SOURCES ${CMAKE_SOURCE_DIR}/share/nuke/ocionuke/viewer.py)
+        list(APPEND DOC_SOURCES ${OCIO_SOURCE_DIR}/share/nuke/ocionuke/viewer.py)
     endif()
 
     # Don't copy configured files. In particular this prevents overwriting conf.py,
@@ -93,11 +93,11 @@ if(${Python_VERSION_MAJOR} GREATER_EQUAL 3)
     )
 
     foreach(f ${DOC_SOURCES})
-        string(REGEX REPLACE "^${CMAKE_SOURCE_DIR}/" "" relpath ${f})
+        string(REGEX REPLACE "^${OCIO_SOURCE_DIR}/" "" relpath ${f})
         string(REGEX REPLACE "[/. ]" "_" tgtname ${relpath})
         string(REGEX MATCH "^docs" IN_DOCS ${relpath})
 
-        set(SRC_PATH ${CMAKE_SOURCE_DIR}/${relpath})
+        set(SRC_PATH ${OCIO_SOURCE_DIR}/${relpath})
         set(DST_PATH ${CMAKE_BINARY_DIR}/${relpath})
         if(NOT IN_DOCS)
             get_filename_component(F_NAME ${relpath} NAME)
@@ -117,8 +117,8 @@ if(${Python_VERSION_MAJOR} GREATER_EQUAL 3)
 
     get_target_property(DOXYGEN_EXECUTABLE Doxygen::doxygen IMPORTED_LOCATION)
 
-    file(GLOB_RECURSE DOXYGEN_SOURCES 
-        "${CMAKE_SOURCE_DIR}/include/*.h"
+    file(GLOB_RECURSE DOXYGEN_SOURCES
+        "${OCIO_SOURCE_DIR}/include/*.h"
         "${CMAKE_BINARY_DIR}/include/*.h"
     )
     set(DOXYGEN_INDEX_XML "${CMAKE_BINARY_DIR}/docs/_doxygen/xml/index.xml")
@@ -140,7 +140,7 @@ if(${Python_VERSION_MAJOR} GREATER_EQUAL 3)
     ### HTML doc target ###
 
     file(GLOB_RECURSE SPHINX_EXTENSIONS
-        "${CMAKE_SOURCE_DIR}/share/docs/*.py"
+        "${OCIO_SOURCE_DIR}/share/docs/*.py"
     )
 
     # Run Sphinx

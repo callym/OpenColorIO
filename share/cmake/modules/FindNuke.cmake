@@ -34,14 +34,14 @@
 #==========
 #
 # Variables defined by this module:
-#   Nuke_FOUND    
+#   Nuke_FOUND
 #   Nuke_INCLUDE_DIR
 #   Nuke_COMPILE_FLAGS
 #   Nuke_LINK_FLAGS
 #   Nuke_LIBRARIES
 #   Nuke_LIBRARY_DIR
 #
-# Usage: 
+# Usage:
 #   FIND_PACKAGE( Nuke )
 #   FIND_PACKAGE( Nuke REQUIRED )
 #
@@ -49,8 +49,8 @@
 # You can tell the module where Nuke is installed by setting
 # the NUKE_INSTALL_PATH (or setting the NDK_PATH environment
 # variable before calling FIND_PACKAGE.
-# 
-# E.g. 
+#
+# E.g.
 #   SET( NUKE_INSTALL_PATH "/usr/local/Nuke5.2v3" )
 #   FIND_PACKAGE( Nuke REQUIRED )
 #
@@ -90,7 +90,7 @@ SET( Nuke_API_VERSION "" )
 IF( NUKE_FOUND )
   TRY_RUN(NUKE_VERSION_EXITCODE NUKE_VERSION_COMPILED
     ${CMAKE_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/share/cmake/modules/src/TestForDDImageVersion.cxx
+    ${OCIO_SOURCE_DIR}/share/cmake/modules/src/TestForDDImageVersion.cxx
     COMPILE_DEFINITIONS
       "-I${Nuke_INCLUDE_DIR}"
     RUN_OUTPUT_VARIABLE
