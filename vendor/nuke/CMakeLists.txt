@@ -6,7 +6,7 @@ if(APPLE)
 endif()
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/export/
+    ${OCIO_SOURCE_DIR}/export/
     ${CMAKE_BINARY_DIR}/export/
     ${Nuke_INCLUDE_DIR}
 )
@@ -106,24 +106,24 @@ add_custom_target(Nuke
     DEPENDS NukeOCIOCDLTransform
 )
 
-install(TARGETS NukeOCIOColorSpace EXPORT OpenColorIO 
-        DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
+install(TARGETS NukeOCIOColorSpace EXPORT OpenColorIO
+    DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
 
-install(TARGETS NukeOCIODisplay EXPORT OpenColorIO 
-        DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
+install(TARGETS NukeOCIODisplay EXPORT OpenColorIO
+    DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
 
-install(TARGETS NukeOCIOLogConvert EXPORT OpenColorIO 
-        DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
+install(TARGETS NukeOCIOLogConvert EXPORT OpenColorIO
+    DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
 
-install(TARGETS NukeOCIOFileTransform EXPORT OpenColorIO 
-        DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
+install(TARGETS NukeOCIOFileTransform EXPORT OpenColorIO
+    DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
 
-install(TARGETS NukeOCIOLookTransform EXPORT OpenColorIO 
-        DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
+install(TARGETS NukeOCIOLookTransform EXPORT OpenColorIO
+    DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
 
-install(TARGETS NukeOCIOCDLTransform EXPORT OpenColorIO 
-        DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
+install(TARGETS NukeOCIOCDLTransform EXPORT OpenColorIO
+    DESTINATION ${CMAKE_INSTALL_EXEC_PREFIX}/lib/nuke${Nuke_API_VERSION})
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/share/nuke
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/
-        PATTERN .svn EXCLUDE)
+install(DIRECTORY ${OCIO_SOURCE_DIR}/share/nuke
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/
+    PATTERN .svn EXCLUDE)

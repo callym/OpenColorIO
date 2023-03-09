@@ -3,8 +3,8 @@
 #
 # -----------------------------------------------------------------------------
 #
-# Utility for replicating the behavior of CMake's configure_file command 
-# for *.in files when CMake is unavailable. Variable values are extracted from 
+# Utility for replicating the behavior of CMake's configure_file command
+# for *.in files when CMake is unavailable. Variable values are extracted from
 # the root CMakeLists.txt file using regular expressions.
 #
 # -----------------------------------------------------------------------------
@@ -39,7 +39,7 @@ def _get_cmake_values(pattern, what):
 
     if not values:
         raise RuntimeError("Failed to get '{}' value from '{}'!".format(
-            what, 
+            what,
             cmake_path
         ))
 
@@ -85,8 +85,8 @@ def get_ocio_version_release_type():
 def get_ocio_namespace(major=None, minor=None, release_type=None):
     """
     .. note::
-        This function will need to be updated if the OCIO_NAMESPACE 
-        format changes. There may also be multiple formats present in the 
+        This function will need to be updated if the OCIO_NAMESPACE
+        format changes. There may also be multiple formats present in the
         module depending on user CMake configuration. We only care about
         the first here, which _should_ be the default.
     """
@@ -109,12 +109,12 @@ def get_ocio_namespace(major=None, minor=None, release_type=None):
 
 def configure_file(src_filename, dst_filename):
     """
-    Substitute common @<var>@ variables in the given file. Support for each 
+    Substitute common @<var>@ variables in the given file. Support for each
     substitution must be added explicitly.
     """
     logger.info("Configuring file: {} -> {}".format(src_filename, dst_filename))
 
-    # CMAKE_SOURCE_DIR
+    # OCIO_SOURCE_DIR
     # CMAKE_BINARY_DIR
     source_dir = binary_dir = ROOT
 
@@ -136,7 +136,7 @@ def configure_file(src_filename, dst_filename):
 
     # OCIO_NAMESPACE
     namespace = get_ocio_namespace(
-        major=major, 
+        major=major,
         minor=minor,
         release_type=release_type
     )
@@ -145,7 +145,7 @@ def configure_file(src_filename, dst_filename):
         data = f.read()
 
     data = data\
-        .replace("@CMAKE_SOURCE_DIR@", source_dir)\
+        .replace("@OCIO_SOURCE_DIR@", source_dir)\
         .replace("@CMAKE_BINARY_DIR@", binary_dir)\
         .replace("@CMAKE_PROJECT_NAME@", name)\
         .replace("@CMAKE_PROJECT_VERSION@", version)\

@@ -19,13 +19,13 @@ set(OFXS_SOURCES
     Support/Library/ofxsPropertyValidation.cpp
 )
 set(PLIST
-    ${CMAKE_SOURCE_DIR}/share/openfx/Info.plist
+    ${OCIO_SOURCE_DIR}/share/openfx/Info.plist
 )
 set(RESOURCES
-    ${CMAKE_SOURCE_DIR}/share/openfx/resources/OpenColorIO.OCIOColorSpace.png
-    ${CMAKE_SOURCE_DIR}/share/openfx/resources/OpenColorIO.OCIOColorSpace.svg
-    ${CMAKE_SOURCE_DIR}/share/openfx/resources/OpenColorIO.OCIODisplayView.png
-    ${CMAKE_SOURCE_DIR}/share/openfx/resources/OpenColorIO.OCIODisplayView.svg
+    ${OCIO_SOURCE_DIR}/share/openfx/resources/OpenColorIO.OCIOColorSpace.png
+    ${OCIO_SOURCE_DIR}/share/openfx/resources/OpenColorIO.OCIOColorSpace.svg
+    ${OCIO_SOURCE_DIR}/share/openfx/resources/OpenColorIO.OCIODisplayView.png
+    ${OCIO_SOURCE_DIR}/share/openfx/resources/OpenColorIO.OCIODisplayView.svg
 )
 
 add_library(ofxplugin MODULE ${SOURCES} ${OFXS_SOURCES})
@@ -41,7 +41,7 @@ endif()
 if(MSVC)
     set(PLATFORM_COMPILE_FLAGS "${PLATFORM_COMPILE_FLAGS} /wd4996 /wd4101")
 else()
-    # Some reported unused parameters in openfx are used when DEBUG macro is 
+    # Some reported unused parameters in openfx are used when DEBUG macro is
     # defined
     set(PLATFORM_COMPILE_FLAGS "${PLATFORM_COMPILE_FLAGS} -Wno-unused-parameter")
 endif()
@@ -55,11 +55,11 @@ set_target_properties(ofxplugin PROPERTIES
 
 target_include_directories(ofxplugin
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        Support/include
-        ${openfx_INCLUDE_DIR}
-        ${CMAKE_SOURCE_DIR}/include/
-        ${CMAKE_BINARY_DIR}/include/
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    Support/include
+    ${openfx_INCLUDE_DIR}
+    ${OCIO_SOURCE_DIR}/include/
+    ${CMAKE_BINARY_DIR}/include/
 )
 
 target_link_libraries(ofxplugin
@@ -86,14 +86,14 @@ elseif(UNIX)
         set(OFX_ARCH "Linux-x86-64")
     endif()
 else()
-    message(FATAL_ERROR 
-            "The OpenColorIO OFX plugins are unsupported for the current system architecture")
+    message(FATAL_ERROR
+        "The OpenColorIO OFX plugins are unsupported for the current system architecture")
 endif()
 
 # Install to OFX package structure
 set(OFX_INSTALL_PREFIX "lib/OpenColorIO.ofx.bundle/Contents")
 
-install(DIRECTORY 
+install(DIRECTORY
     DESTINATION ${OFX_INSTALL_PREFIX}
 )
 install(FILES ${PLIST}
@@ -102,6 +102,6 @@ install(FILES ${PLIST}
 install(FILES ${RESOURCES}
     DESTINATION ${OFX_INSTALL_PREFIX}/Resources
 )
-install(TARGETS ofxplugin LIBRARY 
+install(TARGETS ofxplugin LIBRARY
     DESTINATION ${OFX_INSTALL_PREFIX}/${OFX_ARCH}
 )

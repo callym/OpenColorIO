@@ -2,7 +2,7 @@
 # Copyright Contributors to the OpenColorIO Project.
 
 # Define used for tests in tests/cpu/Context_tests.cpp
-add_definitions("-DOCIO_SOURCE_DIR=${CMAKE_SOURCE_DIR}")
+add_definitions("-DOCIO_SOURCE_DIR=${OCIO_SOURCE_DIR}")
 
 function(add_ocio_test NAME SOURCES PRIVATE_INCLUDES)
     set(TEST_BINARY "test_${NAME}_exec")
@@ -26,7 +26,7 @@ function(add_ocio_test NAME SOURCES PRIVATE_INCLUDES)
     )
 
     if(APPLE)
-        # Frameworks needed to access the ICC monitor profile. 
+        # Frameworks needed to access the ICC monitor profile.
         target_link_libraries(${TEST_BINARY}
             PRIVATE
                 "-framework Carbon"
@@ -37,7 +37,7 @@ function(add_ocio_test NAME SOURCES PRIVATE_INCLUDES)
     if(PRIVATE_INCLUDES)
         target_include_directories(${TEST_BINARY}
             PRIVATE
-                "${CMAKE_SOURCE_DIR}/tests/cpu"
+            "${OCIO_SOURCE_DIR}/tests/cpu"
         )
     endif(PRIVATE_INCLUDES)
     if(OCIO_USE_SSE)
@@ -257,7 +257,7 @@ function(prepend var prefix)
     set(${var} "${new}" PARENT_SCOPE)
 endfunction(prepend)
 
-prepend(SOURCES "${CMAKE_SOURCE_DIR}/src/OpenColorIO/" ${SOURCES})
+prepend(SOURCES "${OCIO_SOURCE_DIR}/src/OpenColorIO/" ${SOURCES})
 
 list(APPEND SOURCES ${TESTS})
 
