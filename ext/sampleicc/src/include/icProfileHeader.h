@@ -3,7 +3,7 @@ File:       icProfileHeader.h
 
 Contains:   ICC profile definitions and structures including Version 4 extensions
 
-Copyright:  © see ICC Software License
+Copyright:  ï¿½ see ICC Software License
 
 * <b>
 * This version of the header file corresponds to the profile
@@ -37,7 +37,7 @@ Copyright:  © see ICC Software License
 * the file.
 *
 * For example to allocate space for a 256 count length UCR
-* and BG array, and fill the allocated data.  Note strlen + 1
+* and BG array, and fill the allocated data.  Note std::strlen + 1
 * to remember NULL terminator.
 *
 icUcrBgCurve    *ucrCurve, *bgCurve;
@@ -50,7 +50,7 @@ ucr_nbytes = sizeof(icUInt32Number) +
 (UCR_CURVE_SIZE * sizeof(icUInt16Number));
 bg_nbytes = sizeof(icUInt32Number) +
 (BG_CURVE_SIZE * sizeof(icUInt16Number));
-string_bytes = strlen(ucr_string) + 1;
+string_bytes = std::strlen(ucr_string) + 1;
 
 ucrBgWrite = (icUcrBg *)malloc(
 (ucr_nbytes + bg_nbytes + string_bytes));
@@ -495,9 +495,9 @@ typedef enum {
 } icColorSpaceSignature;
 
 /** Defined by previous versions of header file but not defined in ICC specification */
-#define icSigMCH1Data       ((icColorSpaceSignature) 0x31434C52)  /* '1CLR' */        
+#define icSigMCH1Data ((icColorSpaceSignature)0x31434C52)         /* '1CLR' */
 #define icSigMCHGData       ((icColorSpaceSignature) 0x47434C52)  /* 'GCLR' */
-#define icSig1colorData     ((icColorSpaceSignature) 0x31434C52)  /* '1CLR' */        
+#define icSig1colorData ((icColorSpaceSignature)0x31434C52)       /* '1CLR' */
 #define icSig16colorData    ((icColorSpaceSignature) 0x47434C52)  /* 'GCLR' */
 
 /** Convenience Enum Definitions - Not defined in ICC specification*/
@@ -866,7 +866,7 @@ typedef struct {
     icUInt16Number      funcType;       /* Function Type                */
                                         /* 0 = gamma only               */
     icUInt16Number      pad;            /* Padding for byte alignment   */
-    icS15Fixed16Number  gamma;          /* x°gamma                      */
+    icS15Fixed16Number  gamma;          /* xï¿½gamma                      */
                                         /* up to 7 values Y,a,b,c,d,e,f */
 } icParametricCurve;
 
@@ -875,7 +875,7 @@ typedef struct {
     icUInt16Number      funcType;       /* Function Type                */
                                         /* 0 = gamma only               */
     icUInt16Number      pad;            /* Padding for byte alignment   */
-    icS15Fixed16Number  gamma;          /* x°gamma                      */
+    icS15Fixed16Number  gamma;          /* xï¿½gamma                      */
     icS15Fixed16Number  a;              /* a                            */
     icS15Fixed16Number  b;              /* b                            */
     icS15Fixed16Number  c;              /* c                            */
@@ -1469,7 +1469,3 @@ icNamedColor        ncolor;         / Named color data *
 } icNamedColorType; */
 
 #endif /* icPROFILEHEADER_H */
-
-
-
-

@@ -88,7 +88,7 @@ OCIO_ADD_TEST(XMLReaderHelper, get_numbers)
 
     // Testing with more values.
     const char str1[] = "inf, -infinity 1.0, -2.0 0x42 nan  , -nan 5.0";
-    const size_t len1 = strlen(str1);
+    const size_t len1 = std::strlen(str1);
 
     OCIO_CHECK_NO_THROW(values = OCIO::GetNumbers<float>(str1, len1));
     OCIO_REQUIRE_EQUAL(values.size(), 8);
@@ -103,7 +103,7 @@ OCIO_ADD_TEST(XMLReaderHelper, get_numbers)
 
     // It is valid to start with delimiters.
     const char str2[] = ",  ,, , 0 2.0 \n \t 3.0 0.1e+1";
-    const size_t len2 = strlen(str2);
+    const size_t len2 = std::strlen(str2);
 
     OCIO_CHECK_NO_THROW(values = OCIO::GetNumbers<float>(str2, len2));
     OCIO_REQUIRE_EQUAL(values.size(), 4);
@@ -114,7 +114,7 @@ OCIO_ADD_TEST(XMLReaderHelper, get_numbers)
 
     // Error: text is not a number.
     const char str3[] = "  0   error 2.0 3.0";
-    const size_t len3 = strlen(str3);
+    const size_t len3 = std::strlen(str3);
 
     OCIO_CHECK_THROW_WHAT(values = OCIO::GetNumbers<float>(str3, len3),
                           OCIO::Exception,
@@ -122,7 +122,7 @@ OCIO_ADD_TEST(XMLReaderHelper, get_numbers)
 
     // Error: number is not separated from text.
     const char str4[] = "0   1.0error 2.0 3.0";
-    const size_t len4 = strlen(str4);
+    const size_t len4 = std::strlen(str4);
 
     OCIO_CHECK_THROW_WHAT(values = OCIO::GetNumbers<float>(str4, len4),
                           OCIO::Exception,
@@ -498,4 +498,3 @@ OCIO_ADD_TEST(XMLReaderHelper, find_sub_string)
         OCIO_CHECK_EQUAL(end, 0);
     }
 }
-

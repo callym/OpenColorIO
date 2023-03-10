@@ -3,6 +3,7 @@
 
 
 #include <cstdio>
+#include <cstring>
 
 #include "ops/exponent/ExponentOp.h"
 #include "ops/matrix/MatrixOpData.h"
@@ -32,7 +33,7 @@ OCIO_ADD_TEST(CDLTransform, equality)
     OCIO_CHECK_ASSERT(!cdl1->equals(*cdl3));
     OCIO_CHECK_ASSERT(!cdl2->equals(*cdl3));
     OCIO_CHECK_ASSERT(cdl3->equals(*cdl3));
-    
+
     cdl2->setStyle(OCIO::CDL_ASC);
     OCIO_CHECK_ASSERT(!cdl1->equals(*cdl2));
 }
@@ -373,7 +374,7 @@ OCIO_ADD_TEST(CDLTransform, faulty_file_content)
         std::string faultyContent = kContentsA;
         const std::size_t found = faultyContent.find("cc03344");
         OCIO_CHECK_ASSERT(found!=std::string::npos);
-        faultyContent.replace(found, strlen("cc03344"), "cc03343");
+        faultyContent.replace(found, std::strlen("cc03344"), "cc03343");
 
         std::fstream stream(guard.m_filename, std::ios_base::out|std::ios_base::trunc);
         OCIO_REQUIRE_ASSERT(stream.is_open());

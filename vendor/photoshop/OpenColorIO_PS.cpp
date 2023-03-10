@@ -11,6 +11,7 @@
 #include "PIUFile.h"
 
 #include <assert.h>
+#include <cstring>
 
 #ifdef __PIWin__
 //#include <Windows.h>
@@ -28,7 +29,7 @@ FilterRecord * gFilterRecord = NULL;
 
 typedef struct {
     long        sig;
-    
+
     OCIO_Source source;
     Str255      configName;
     Str255      configPath;
@@ -51,10 +52,10 @@ typedef struct {
 
 static void myC2PString(Str255 &pstr, const char *cstr)
 {
-    const size_t len = MIN(strlen(cstr), 254);
-    
+    const size_t len = MIN(std::strlen(cstr), 254);
+
     strncpy((char *)&pstr[1], cstr, len);
-    
+
     pstr[0] = len;
     pstr[len + 1] = '\0';
 }
@@ -62,9 +63,9 @@ static void myC2PString(Str255 &pstr, const char *cstr)
 static const char * myP2CString(Str255 &pstr)
 {
     size_t len = pstr[0];
-    
+
     pstr[len + 1] = '\0';
-    
+
     return (const char *)&pstr[1];
 }
 
@@ -77,11 +78,11 @@ static void myP2PString(Str255 &dest, const Str255 &src)
 static void ReportException(GPtr globals, const std::exception &e)
 {
     Str255 p_str;
-    
+
     myC2PString(p_str, e.what());
-    
+
     PIReportError(p_str);
-    
+
     gResult = errReportString;
 }
 
@@ -95,11 +96,11 @@ static Boolean ReadScriptParams(GPtr globals)
     int32                       flags = 0;
     OSErr                       stickyError = noErr;
     Boolean                     returnValue = true;
-    
+
     if(DescriptorAvailable(NULL))
     {
         token = OpenReader(array);
-        
+
         if(token)
         {
             while(PIGetKey(token, &key, &type, &flags))
@@ -162,10 +163,10 @@ static Boolean ReadScriptParams(GPtr globals)
 
             stickyError = CloseReader(&token); // closes & disposes.
         }
-        
+
         returnValue = PlayDialog();
     }
-    
+
     return returnValue;
 }
 
@@ -173,17 +174,17 @@ static OSErr WriteScriptParams(GPtr globals)
 {
     PIWriteDescriptor           token = nil;
     OSErr                       gotErr = noErr;
-            
+
     if(DescriptorAvailable(NULL))
     {
         token = OpenWriter();
-        
+
         if(token)
         {
             PIPutEnum(token, ocioKeySource, typeSource, (globals->source == OCIO_SOURCE_ENVIRONMENT ? sourceEnvironment :
                                                         globals->source == OCIO_SOURCE_CUSTOM ? sourceCustom :
                                                         sourceStandard));
-        
+
             if(globals->source == OCIO_SOURCE_STANDARD)
             {
                 PIPutStr(token, ocioKeyConfigName, globals->configName);
@@ -192,20 +193,16 @@ static OSErr WriteScriptParams(GPtr globals)
             {
                 PIPutAlias(token, ocioKeyConfigFileHandle, globals->configFileHandle);
             }
-            
-            
-            PIPutEnum(token, ocioKeyAction, typeAction, (globals->action == OCIO_ACTION_LUT ? actionLUT :
-                                                        globals->action == OCIO_ACTION_DISPLAY ? actionDisplay :
-                                                        actionConvert));
-            
-            if(globals->action == OCIO_ACTION_LUT)
+
+            PIPutEnum(token, ocioKeyAction, typeAction, (globals->action == OCIO_ACTION_LUT ? actionLUT : globals->action == OCIO_ACTION_DISPLAY ? actionDisplay
+                                                                                                                                                 : actionConvert));
+
+            if (globals->action == OCIO_ACTION_LUT)
             {
-                PIPutEnum(token, ocioKeyInterpolation, typeInterpolation, (globals->interpolation == OCIO_INTERP_NEAREST ? interpNearest :
-                                                                        globals->interpolation == OCIO_INTERP_LINEAR ? interpLinear :
-                                                                        globals->interpolation == OCIO_INTERP_TETRAHEDRAL ? interpTetrahedral :
-                                                                        globals->interpolation == OCIO_INTERP_CUBIC ? interpCubic :
-                                                                        interpBest));
-                                                                        
+                PIPutEnum(token, ocioKeyInterpolation, typeInterpolation, (globals->interpolation == OCIO_INTERP_NEAREST ? interpNearest : globals->interpolation == OCIO_INTERP_LINEAR    ? interpLinear
+                                                                                                                                       : globals->interpolation == OCIO_INTERP_TETRAHEDRAL ? interpTetrahedral
+                                                                                                                                       : globals->interpolation == OCIO_INTERP_CUBIC       ? interpCubic
+                                                                                                                                                                                           : interpBest));
             }
             else if(globals->action == OCIO_ACTION_DISPLAY)
             {
@@ -216,17 +213,17 @@ static OSErr WriteScriptParams(GPtr globals)
             else
             {
                 assert(globals->action == OCIO_ACTION_CONVERT);
-                
+
                 PIPutStr(token, ocioKeyInputSpace, globals->inputSpace);
                 PIPutStr(token, ocioKeyOutputSpace, globals->outputSpace);
             }
-            
-			PIPutBool(token, ocioKeyInvert, globals->invert);
+
+            PIPutBool(token, ocioKeyInvert, globals->invert);
 
             gotErr = CloseWriter(&token); // closes and sets dialog optional
         }
     }
-    
+
     return gotErr;
 }
 
@@ -260,7 +257,7 @@ void ValidateParameters(GPtr globals)
             if(param)
             {
                 param->sig = OpenColorIOSignature;
-                
+
                 param->source           = globals->source;
                 myP2PString(param->configName, globals->configName);
                 myC2PString(param->configPath, "dummyPath");
@@ -280,43 +277,42 @@ void ValidateParameters(GPtr globals)
             gResult = memFullErr;
             return;
         }
-    }   
+    }
 }
 
 
 static void InitGlobals(Ptr globalPtr)
-{   
+{
     GPtr globals = (GPtr)globalPtr;
 
-    globals->do_dialog  = FALSE;
-    
-    globals->source             = OCIO_SOURCE_ENVIRONMENT;
+    globals->do_dialog = FALSE;
+
+    globals->source = OCIO_SOURCE_ENVIRONMENT;
     myC2PString(globals->configName, "");
-    globals->configFileHandle   = NULL;
-    globals->action             = OCIO_ACTION_NONE;
-    globals->invert             = FALSE;
-    globals->interpolation      = OCIO_INTERP_LINEAR;
+    globals->configFileHandle = NULL;
+    globals->action = OCIO_ACTION_NONE;
+    globals->invert = FALSE;
+    globals->interpolation = OCIO_INTERP_LINEAR;
     myC2PString(globals->inputSpace, "");
     myC2PString(globals->outputSpace, "");
     myC2PString(globals->view, "");
     myC2PString(globals->display, "");
-    
-    
+
     // set default with environment variable if it's set
     std::string env;
     OpenColorIO_PS_Context::getenvOCIO(env);
-    
-    if(!env.empty())
+
+    if (!env.empty())
     {
         std::string path = env;
-        
-        if( !path.empty() )
+
+        if (!path.empty())
         {
             try
             {
                 OpenColorIO_PS_Context context(path);
-                
-                if( context.isLUT() )
+
+                if (context.isLUT())
                 {
                     globals->source = OCIO_SOURCE_ENVIRONMENT;
                     globals->action = OCIO_ACTION_LUT;
@@ -325,11 +321,10 @@ static void InitGlobals(Ptr globalPtr)
                 {
                     const std::string &defaultInputName = context.getDefaultColorSpace();
                     const std::string &defaultOutputName = defaultInputName;
-                    
+
                     const std::string &defaultDisplay = context.getDefaultDisplay();
                     const std::string defaultView = context.getDefaultView(defaultDisplay);
-                    
-                    
+
                     globals->source = OCIO_SOURCE_ENVIRONMENT;
                     globals->action = OCIO_ACTION_CONVERT;
                     myC2PString(globals->inputSpace, defaultInputName.c_str());
@@ -338,26 +333,24 @@ static void InitGlobals(Ptr globalPtr)
                     myC2PString(globals->view, defaultView.c_str());
                 }
             }
-            catch(const std::exception &e)
+            catch (const std::exception &e)
             {
                 ReportException(globals, e);
             }
-            catch(...)
+            catch (...)
             {
                 gResult = filterBadParameters;
             }
         }
     }
-    
-    
+
     ValidateParameters(globals);
 }
-
 
 static void DoParameters(GPtr globals)
 {
     Boolean do_dialog = ReadScriptParams(globals);
-    
+
     if(do_dialog)
     {
         // in the modern era, we always do dialogs in the render function
@@ -381,7 +374,7 @@ template <typename T, int max, bool round, bool clamp>
 static void ConvertRow(T *row, int len, OCIO::ConstCPUProcessorRcPtr processor)
 {
     float *floatRow = NULL;
-    
+
     if(max == 1)
     {
         floatRow = (float *)row;
@@ -389,13 +382,13 @@ static void ConvertRow(T *row, int len, OCIO::ConstCPUProcessorRcPtr processor)
     else
     {
         floatRow = (float *)malloc(sizeof(float) * len * 3);
-        
+
         if(floatRow == NULL)
             return;
-        
+
         const T *in = row;
         float *out = floatRow;
-        
+
         for(int x=0; x < len; x++)
         {
             *out++ = ((float)*in++ / (float)max);
@@ -403,27 +396,25 @@ static void ConvertRow(T *row, int len, OCIO::ConstCPUProcessorRcPtr processor)
             *out++ = ((float)*in++ / (float)max);
         }
     }
-    
-    
+
     OCIO::PackedImageDesc img(floatRow, len, 1, 3);
-    
+
     processor->apply(img);
-    
-    
+
     if(max != 1)
     {
         const float *in = floatRow;
         T *out = row;
-        
+
         assert(round && clamp);
-        
+
         for(int x=0; x < len; x++)
         {
             *out++ = (Clamp(*in++) * (float)max) + 0.5f;
             *out++ = (Clamp(*in++) * (float)max) + 0.5f;
             *out++ = (Clamp(*in++) * (float)max) + 0.5f;
         }
-        
+
         free(floatRow);
     }
 }
@@ -434,7 +425,7 @@ static void ProcessTile(GPtr globals, void *tileData, VRect &tileRect, int32 row
 
     const uint32 rectHeight = tileRect.bottom - tileRect.top;
     const uint32 rectWidth = tileRect.right - tileRect.left;
-    
+
     unsigned char *row = (unsigned char *)tileData;
 
     for(uint32 pixelY = 0; pixelY < rectHeight; pixelY++)
@@ -465,53 +456,52 @@ static void DoStart(GPtr globals)
             PIUnlockHandle(gStuff->parameters);
         }
     }
-    
+
     // modern scripting part
     Boolean do_dialog = ReadScriptParams(globals);
-    
+
     if(do_dialog || globals->do_dialog)
     {
         DialogParams dialogParams;
-        
+
         dialogParams.source = (globals->source == OCIO_SOURCE_ENVIRONMENT ? SOURCE_ENVIRONMENT :
                                 globals->source == OCIO_SOURCE_CUSTOM ? SOURCE_CUSTOM :
                                 SOURCE_STANDARD);
-        
+
         if(globals->source == OCIO_SOURCE_CUSTOM)
         {
             assert(globals->configFileHandle != NULL);
-        
+
             char file_path[256];
             file_path[0] = '\0';
-            
+
             AliasToFullPath(globals->configFileHandle, file_path, 255);
-            
+
             dialogParams.config = file_path;
         }
         else if(globals->source == OCIO_SOURCE_STANDARD)
         {
             dialogParams.config = myP2CString(globals->configName);
         }
-        
+
         dialogParams.action = (globals->action == OCIO_ACTION_LUT ? ACTION_LUT :
                                 globals->action == OCIO_ACTION_DISPLAY ? ACTION_DISPLAY :
                                 ACTION_CONVERT);
-                                
+
         dialogParams.invert = globals->invert;
-        
+
         dialogParams.interpolation = (globals->interpolation == OCIO_INTERP_NEAREST ? INTERPO_NEAREST :
                                         globals->interpolation == OCIO_INTERP_LINEAR ? INTERPO_LINEAR :
                                         globals->interpolation == OCIO_INTERP_TETRAHEDRAL ? INTERPO_TETRAHEDRAL :
                                         globals->interpolation == OCIO_INTERP_CUBIC ? INTERPO_CUBIC :
                                         INTERPO_BEST);
-                                        
+
         dialogParams.inputSpace = myP2CString(globals->inputSpace);
         dialogParams.outputSpace = myP2CString(globals->outputSpace);
         dialogParams.display = myP2CString(globals->display);
         dialogParams.view = myP2CString(globals->view);
-        
-    
-    #ifdef __PIMac__
+
+#ifdef __PIMac__
         const char *plugHndl = "org.OpenColorIO.Photoshop";
         const void *hwnd = NULL;
     #else
@@ -519,41 +509,37 @@ static void DoStart(GPtr globals)
         const void *plugHndl = hDllInstance;
         HWND hwnd = (HWND)((PlatformData *)gStuff->platformData)->hwnd;
     #endif
-        
+
         const DialogResult dialogResult = OpenColorIO_PS_Dialog(dialogParams, plugHndl, hwnd);
-        
-        
-        if(dialogResult == RESULT_OK || dialogResult == RESULT_EXPORT)
+
+        if (dialogResult == RESULT_OK || dialogResult == RESULT_EXPORT)
         {
-            globals->source = (dialogParams.source == SOURCE_ENVIRONMENT ? OCIO_SOURCE_ENVIRONMENT :
-                                dialogParams.source == SOURCE_CUSTOM ? OCIO_SOURCE_CUSTOM :
-                                OCIO_SOURCE_STANDARD);
-            
-            if(dialogParams.source == SOURCE_CUSTOM)
+            globals->source = (dialogParams.source == SOURCE_ENVIRONMENT ? OCIO_SOURCE_ENVIRONMENT : dialogParams.source == SOURCE_CUSTOM ? OCIO_SOURCE_CUSTOM
+                                                                                                                                          : OCIO_SOURCE_STANDARD);
+
+            if (dialogParams.source == SOURCE_CUSTOM)
             {
                 char file_path[256];
                 strncpy(file_path, dialogParams.config.c_str(), 256);
                 file_path[255] = '\0';
-                
+
                 FullPathToAlias(file_path, globals->configFileHandle);
             }
-            else if(dialogParams.source == SOURCE_STANDARD)
+            else if (dialogParams.source == SOURCE_STANDARD)
             {
                 myC2PString(globals->configName, dialogParams.config.c_str());
             }
-            
-            globals->action = (dialogParams.action == ACTION_LUT ? OCIO_ACTION_LUT :
-                                dialogParams.action == ACTION_DISPLAY ? OCIO_ACTION_DISPLAY :
-                                OCIO_ACTION_CONVERT);
-            
+
+            globals->action = (dialogParams.action == ACTION_LUT ? OCIO_ACTION_LUT : dialogParams.action == ACTION_DISPLAY ? OCIO_ACTION_DISPLAY
+                                                                                                                           : OCIO_ACTION_CONVERT);
+
             globals->invert = dialogParams.invert;
-            
-            globals->interpolation = (dialogParams.interpolation == INTERPO_NEAREST ? OCIO_INTERP_NEAREST :
-                                        dialogParams.interpolation == INTERPO_LINEAR ? OCIO_INTERP_LINEAR :
-                                        dialogParams.interpolation == INTERPO_TETRAHEDRAL ? OCIO_INTERP_TETRAHEDRAL :
-                                        dialogParams.interpolation == INTERPO_CUBIC ? OCIO_INTERP_CUBIC :
-                                        OCIO_INTERP_BEST);
-                                        
+
+            globals->interpolation = (dialogParams.interpolation == INTERPO_NEAREST ? OCIO_INTERP_NEAREST : dialogParams.interpolation == INTERPO_LINEAR    ? OCIO_INTERP_LINEAR
+                                                                                                        : dialogParams.interpolation == INTERPO_TETRAHEDRAL ? OCIO_INTERP_TETRAHEDRAL
+                                                                                                        : dialogParams.interpolation == INTERPO_CUBIC       ? OCIO_INTERP_CUBIC
+                                                                                                                                                            : OCIO_INTERP_BEST);
+
             myC2PString(globals->inputSpace, dialogParams.inputSpace.c_str());
             myC2PString(globals->outputSpace, dialogParams.outputSpace.c_str());
             myC2PString(globals->display, dialogParams.display.c_str());
@@ -561,7 +547,6 @@ static void DoStart(GPtr globals)
         }
         else
             gResult = userCanceledErr;
-        
 
         globals->do_dialog = FALSE;
 
@@ -572,37 +557,36 @@ static void DoStart(GPtr globals)
         }
     }
 
-    
     std::string path;
-    
-    if(gResult == noErr)
+
+    if (gResult == noErr)
     {
-        if(globals->source == OCIO_SOURCE_ENVIRONMENT)
+        if (globals->source == OCIO_SOURCE_ENVIRONMENT)
         {
             std::string env;
             OpenColorIO_PS_Context::getenvOCIO(env);
-            
-            if(!env.empty())
+
+            if (!env.empty())
             {
                 path = env;
             }
         }
-        else if(globals->source == OCIO_SOURCE_CUSTOM)
+        else if (globals->source == OCIO_SOURCE_CUSTOM)
         {
             assert(globals->configFileHandle != NULL);
-        
+
             char file_path[256];
             file_path[0] = '\0';
-            
+
             AliasToFullPath(globals->configFileHandle, file_path, 255);
-            
+
             path = file_path;
         }
         else
         {
             assert(globals->source == OCIO_SOURCE_STANDARD);
-            
-        #ifdef __PIMac__
+
+#ifdef __PIMac__
             const char *standardDirectory = "/Library/Application Support/OpenColorIO";
             const std::string pathSeperator = "/";
         #else
@@ -614,38 +598,38 @@ static void DoStart(GPtr globals)
 
             const std::string standardDirectory = std::string(appdata_path) + pathSeperator + "OpenColorIO";
         #endif
-        
+
             path = standardDirectory;
-            
+
             path += pathSeperator;
-            
+
             path += myP2CString(globals->configName);
-            
+
             path += pathSeperator + "config.ocio";
         }
-        
+
         if( path.empty() )
             gResult = filterBadParameters;
     }
-    
+
     if(gResult == noErr)
     {
         try
         {
             OpenColorIO_PS_Context context(path);
-            
+
             OCIO::ConstCPUProcessorRcPtr processor;
-            
+
             if( context.isLUT() )
             {
                 assert(globals->action == OCIO_ACTION_LUT);
-                
+
                 const OCIO::Interpolation interpolation = (globals->interpolation == OCIO_INTERP_NEAREST ? OCIO::INTERP_NEAREST :
                                                             globals->interpolation == OCIO_INTERP_LINEAR ? OCIO::INTERP_LINEAR :
                                                             globals->interpolation == OCIO_INTERP_TETRAHEDRAL ? OCIO::INTERP_TETRAHEDRAL :
                                                             globals->interpolation == OCIO_INTERP_CUBIC ? OCIO::INTERP_CUBIC :
                                                             OCIO::INTERP_BEST);
-                                                            
+
                 processor = context.getLUTProcessor(interpolation, globals->invert);
             }
             else
@@ -657,22 +641,20 @@ static void DoStart(GPtr globals)
                 else
                 {
                     assert(globals->action == OCIO_ACTION_CONVERT);
-                    
+
                     processor = context.getConvertProcessor(myP2CString(globals->inputSpace), myP2CString(globals->outputSpace), globals->invert);
                 }
             }
-            
-            
-            
+
             // now the Photoshop part
             int16 tileHeight = gStuff->outTileHeight;
             int16 tileWidth = gStuff->outTileWidth;
 
-            if(tileWidth == 0 || tileHeight == 0 || gStuff->advanceState == NULL)
+            if (tileWidth == 0 || tileHeight == 0 || gStuff->advanceState == NULL)
             {
                 gResult = filterBadParameters;
             }
-            
+
             VRect outRect = GetOutRect();
             VRect filterRect = GetFilterRect();
 
@@ -688,12 +670,12 @@ static void DoStart(GPtr globals)
             gStuff->outLoPlane = 0;
             gStuff->outHiPlane = 2;
 
-            for(uint16 vertTile = 0; vertTile < tilesVert && gResult == noErr; vertTile++)
+            for (uint16 vertTile = 0; vertTile < tilesVert && gResult == noErr; vertTile++)
             {
-                for(uint16 horizTile = 0; horizTile < tilesHoriz && gResult == noErr; horizTile++)
+                for (uint16 horizTile = 0; horizTile < tilesHoriz && gResult == noErr; horizTile++)
                 {
-                    outRect.top = filterRect.top + ( vertTile * tileHeight );
-                    outRect.left = filterRect.left + ( horizTile * tileWidth );
+                    outRect.top = filterRect.top + (vertTile * tileHeight);
+                    outRect.left = filterRect.left + (horizTile * tileWidth);
                     outRect.bottom = outRect.top + tileHeight;
                     outRect.right = outRect.left + tileWidth;
 
@@ -705,14 +687,14 @@ static void DoStart(GPtr globals)
                     SetOutRect(outRect);
 
                     gResult = AdvanceState();
-                    
-                    if(gResult == kNoErr)
+
+                    if (gResult == kNoErr)
                     {
                         outRect = GetOutRect();
-                        
+
                         ProcessTile(globals,
-                                    gStuff->outData, 
-                                    outRect, 
+                                    gStuff->outData,
+                                    outRect,
                                     gStuff->outRowBytes,
                                     processor);
                     }
@@ -720,7 +702,7 @@ static void DoStart(GPtr globals)
 
                 PIUpdateProgress(++progress_complete, progress_total);
 
-                if( TestAbort() ) 
+                if (TestAbort())
                 {
                     gResult = userCanceledErr;
                 }
@@ -738,7 +720,7 @@ static void DoStart(GPtr globals)
 
     VRect nullRect = {0,0,0,0};
     SetOutRect(nullRect);
-    
+
     if(gResult == noErr)
         WriteScriptParams(globals);
 }
@@ -769,8 +751,8 @@ DLLExport SPAPI void PluginMain(const int16 selector,
     #endif
 
         DoAbout((AboutRecordPtr)filterRecord);
-    } 
-    else 
+    }
+    else
     {
         gFilterRecord = filterRecord;
         sSPBasic = filterRecord->sSPBasic;
@@ -787,21 +769,21 @@ DLLExport SPAPI void PluginMain(const int16 selector,
 		if(filterRecord->handleProcs)
 		{
 			bool must_init = false;
-			
-			if(*data == NULL)
-			{
+
+            if (*data == NULL)
+            {
 				*data = (intptr_t)filterRecord->handleProcs->newProc(sizeof(Globals));
-				
-				must_init = true;
-			}
+
+                must_init = true;
+            }
 
 			if(*data != NULL)
 			{
 				globalPtr = filterRecord->handleProcs->lockProc((Handle)*data, TRUE);
 				globals = (GPtr)globalPtr;
-				
-				globals->result = result;
-				globals->filterParamBlock = filterRecord;
+
+                globals->result = result;
+                globals->filterParamBlock = filterRecord;
 
 				if(must_init)
 					InitGlobals(globalPtr);
@@ -817,18 +799,18 @@ DLLExport SPAPI void PluginMain(const int16 selector,
 			if(*data == NULL)
 			{
 				*data = (intptr_t)malloc(sizeof(Globals));
-				
-				if(*data == NULL)
-				{
+
+                if (*data == NULL)
+                {
 					*result = memFullErr;
 					return;
 				}
-				
-				globalPtr = (Ptr)*data;
-				globals = (GPtr)globalPtr;
-				
-				globals->result = result;
-				globals->filterParamBlock = filterRecord;
+
+                globalPtr = (Ptr)*data;
+                globals = (GPtr)globalPtr;
+
+                globals->result = result;
+                globals->filterParamBlock = filterRecord;
 
 				InitGlobals(globalPtr);
 			}
@@ -836,19 +818,17 @@ DLLExport SPAPI void PluginMain(const int16 selector,
 			{
 				globalPtr = (Ptr)*data;
 				globals = (GPtr)globalPtr;
-				
-				globals->result = result;
-				globals->filterParamBlock = filterRecord;
+
+                globals->result = result;
+                globals->filterParamBlock = filterRecord;
 			}
 		}
 
         if(globalPtr == NULL)
-        {       
+        {
             *result = memFullErr;
             return;
         }
-
-		
 
         if (gStuff->bigDocumentData != NULL)
             gStuff->bigDocumentData->PluginUsing32BitCoordinates = true;
@@ -880,4 +860,3 @@ DLLExport SPAPI void PluginMain(const int16 selector,
             PIUnlockHandle((Handle)*data);
     }
 }
-

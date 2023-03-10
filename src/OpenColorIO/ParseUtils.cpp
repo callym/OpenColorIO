@@ -555,7 +555,7 @@ bool StringToFloat(float * fval, const char * str)
     if(!str) return false;
 
     float x = NAN;
-    const auto result = NumberUtils::from_chars(str, str + strlen(str), x);
+    const auto result = NumberUtils::from_chars(str, str + std::strlen(str), x);
     if (result.ec != std::errc())
     {
         return false;

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_OCIO_FILEFORMATS_XMLUTILS_XMLREADERHELPER_H
 #define INCLUDED_OCIO_FILEFORMATS_XMLUTILS_XMLREADERHELPER_H
 
-
+#include <cstring>
 #include <string.h>
 
 #include <OpenColorIO/OpenColorIO.h>
@@ -73,7 +73,7 @@ protected:
     template<typename T>
     void parseScalarAttribute(const char * name, const char * attrib, T & value)
     {
-        const size_t len = strlen(attrib);
+        const size_t len = std::strlen(attrib);
         std::vector<T> data;
 
         try

@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 #include <map>
 #include <regex>
 #include <sstream>
@@ -61,7 +62,7 @@ std::string ConvertToRegularExpression(const char * globPattern, bool ignoreCase
 
     if (ignoreCase)
     {
-        const size_t length = strlen(globPattern);
+        const size_t length = std::strlen(globPattern);
         bool respectCase = false;
         for (size_t i = 0; i < length; ++i)
         {
@@ -274,10 +275,10 @@ void ValidateRegularExpression(const char * regex)
     catch (std::regex_error & ex)
     {
         std::ostringstream oss;
-        oss << "File rules: invalid regular expression '" 
+        oss << "File rules: invalid regular expression '"
             << regex
             << "': '"
-            << ex.what() 
+            << ex.what()
             << "'.";
         throw Exception(oss.str().c_str());
     }
@@ -1004,12 +1005,11 @@ void UpdateFileRulesFromV1ToV2(const Config & config, FileRulesRcPtr & fileRules
             bool found = false;
             for (int idx = 0; idx < numColorSpaces && !found; ++idx)
             {
-                const char * csName 
-                    = config.getColorSpaceNameByIndex(SEARCH_REFERENCE_SPACE_SCENE,
-                                                      COLORSPACE_ALL,
-                                                      idx);
+                const char *csName = config.getColorSpaceNameByIndex(SEARCH_REFERENCE_SPACE_SCENE,
+                                                                     COLORSPACE_ALL,
+                                                                     idx);
                 ConstColorSpaceRcPtr cs = config.getColorSpace(csName);
-                
+
                 if (cs->isData())
                 {
                     fileRules->setColorSpace(1, csName);

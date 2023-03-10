@@ -2,6 +2,7 @@
 // Copyright Contributors to the OpenColorIO Project.
 
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -337,7 +338,7 @@ private:
             {
                 recognizedName |= true;
 
-                if (!parentName || !strlen(parentName) ||
+                if (!parentName || !std::strlen(parentName) ||
                     (parent &&
                      0 == Platform::Strcasecmp(parent->getName().c_str(),
                                                parentName)))
@@ -372,7 +373,7 @@ private:
             // If found name in the tag list, test the parent name.
             if (i < numTags)
             {
-                if (!parentName || !strlen(parentName) ||
+                if (!parentName || !std::strlen(parentName) ||
                     (parent && 0 == Platform::Strcasecmp(parent->getName().c_str(), parentName)))
                 {
                     return true;
@@ -394,7 +395,7 @@ private:
             if (0 == Platform::Strcasecmp(name, tag))
             {
                 recognizedName |= true;
-                
+
                 const size_t numParents(parentNames.size());
                 size_t i = 0;
                 for (; i<numParents; ++i)
@@ -694,7 +695,7 @@ private:
                             pImpl->getXmlFilename()));
                 }
                 // Dynamic Property is valid under any operator parent. First
-                // test if the tag is supported to set the recognizedName 
+                // test if the tag is supported to set the recognizedName
                 // accordingly, without testing for parents. Test for the
                 // parent type prior to testing the name.
                 else if (SupportedElement(name, pElt, TAG_DYNAMIC_PARAMETER,
@@ -763,7 +764,7 @@ private:
                     }
 
                 }
-                else if (SupportedElement(name, pElt, TAG_INFO, 
+                else if (SupportedElement(name, pElt, TAG_INFO,
                                           TAG_PROCESS_LIST, recognizedName))
                 {
                     pImpl->m_elms.push_back(
@@ -1028,8 +1029,8 @@ private:
     }
 
     // Handle of strings within an element.
-    static void CharacterDataHandler(void * userData,
-                                     const XML_Char * s, 
+    static void CharacterDataHandler(void *userData,
+                                     const XML_Char *s,
                                      int len)
     {
         XMLParserHelper * pImpl = (XMLParserHelper*)userData;
@@ -1092,7 +1093,7 @@ private:
                         pImpl->throwMessage(oss.str());
                     }
 
-                    auto pPlainElt = 
+                    auto pPlainElt =
                         std::dynamic_pointer_cast<XmlReaderPlainElt>(pElt);
                     if (!pPlainElt)
                     {
@@ -1151,7 +1152,7 @@ bool isLoadableCTF(std::istream & istream)
         {
             istream.getline(line, limit);
             if (strstr(line, pattern)) foundPattern = true;
-            sizeProcessed += (unsigned)strlen(line);
+            sizeProcessed += (unsigned)std::strlen(line);
         }
     }
 

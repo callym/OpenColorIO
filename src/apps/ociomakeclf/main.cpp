@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright Contributors to the OpenColorIO Project.
 
-
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <string.h>
@@ -41,11 +41,10 @@ void CreateOutputLutFile(const std::string & outLutFilepath, OCIO::ConstGroupTra
     OCIO::ConstProcessorRcPtr processor = config->getProcessor(transform);
 
     // CLF file format does not support inverse 1D LUTs, optimize the processor
-    // to replace inverse 1D LUTs by 'fast forward' 1D LUTs. 
-    OCIO::ConstProcessorRcPtr optProcessor
-        = processor->getOptimizedProcessor(OCIO::BIT_DEPTH_F32, 
-                                           OCIO::BIT_DEPTH_F32,
-                                           OCIO::OPTIMIZATION_LUT_INV_FAST);
+    // to replace inverse 1D LUTs by 'fast forward' 1D LUTs.
+    OCIO::ConstProcessorRcPtr optProcessor = processor->getOptimizedProcessor(OCIO::BIT_DEPTH_F32,
+                                                                              OCIO::BIT_DEPTH_F32,
+                                                                              OCIO::OPTIMIZATION_LUT_INV_FAST);
 
     // Create the CLF file.
 
@@ -111,7 +110,7 @@ int main(int argc, const char ** argv)
         return 0;
     }
 
-    // The LMT must accept and produce ACES2065-1 so look for all built-in transforms that produce 
+    // The LMT must accept and produce ACES2065-1 so look for all built-in transforms that produce
     // that (based on the naming conventions).
     static constexpr char BuiltinSuffix[] = "_to_ACES2065-1";
 
@@ -125,7 +124,7 @@ int main(int argc, const char ** argv)
             std::string cscName = registry->getBuiltinStyle(idx);
             if (StringUtils::EndsWith(cscName, BuiltinSuffix))
             {
-                cscName.resize(cscName.size() - strlen(BuiltinSuffix));
+                cscName.resize(cscName.size() - std::strlen(BuiltinSuffix));
                 std::cout << std::endl << "\t" << cscName;
             }
         }
@@ -140,7 +139,7 @@ int main(int argc, const char ** argv)
         ap.usage();
         return 1;
     }
-    
+
     const std::string inLutFilepath   = args[0].c_str();
     const std::string outLutFilepath  = args[1].c_str();
 
@@ -149,7 +148,7 @@ int main(int argc, const char ** argv)
     if (!cscColorSpace.empty())
     {
         cscColorSpace += BuiltinSuffix;
-    
+
         OCIO::ConstBuiltinTransformRegistryRcPtr registry = OCIO::BuiltinTransformRegistry::Get();
 
         bool cscFound = false;

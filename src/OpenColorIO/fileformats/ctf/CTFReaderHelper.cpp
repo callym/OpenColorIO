@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright Contributors to the OpenColorIO Project.
 
+#include <cstring>
+
 #include "BitDepthUtils.h"
 #include "fileformats/ctf/CTFReaderHelper.h"
 #include "fileformats/ctf/CTFReaderUtils.h"
@@ -289,7 +291,7 @@ void CTFReaderArrayElt::start(const char ** atts)
             isDimFound = true;
 
             const char* dimStr = atts[i + 1];
-            const size_t len = strlen(dimStr);
+            const size_t len = std::strlen(dimStr);
 
             CTFArrayMgt::Dimensions dims;
             try
@@ -457,7 +459,7 @@ void CTFReaderIndexMapElt::start(const char ** atts)
             isDimFound = true;
 
             const char* dimStr = atts[i + 1];
-            const size_t len = strlen(dimStr);
+            const size_t len = std::strlen(dimStr);
 
             CTFIndexMapMgt::DimensionsIM dims;
             try
@@ -737,23 +739,23 @@ namespace
 void validateInfoElementVersion(const char * versionAttr,
                                 const char * versionValue)
 {
-    // There are 3 rules for an <Info> element version attribute to be valid :
-    //
-    // 1- Not exist. No version means version 1.0. It will always be valid.
-    // 2- Be of the following format : MAJOR.MINOR ( i.e '3.0' )
-    // 3- The major version should be equal or smaller then the current major version.
-    //
-    // Note: The minor version is not taken into account when validating the
-    // version. The minor version is only for tracking purposes.
-    // Note: <Info> is not part of CLF.
-    // 
-    if (versionAttr && *versionAttr &&
-        0 == Platform::Strcasecmp(ATTR_VERSION, versionAttr))
-    {
-        if (!versionValue || !*versionValue)
+        // There are 3 rules for an <Info> element version attribute to be valid :
+        //
+        // 1- Not exist. No version means version 1.0. It will always be valid.
+        // 2- Be of the following format : MAJOR.MINOR ( i.e '3.0' )
+        // 3- The major version should be equal or smaller then the current major version.
+        //
+        // Note: The minor version is not taken into account when validating the
+        // version. The minor version is only for tracking purposes.
+        // Note: <Info> is not part of CLF.
+        //
+        if (versionAttr && *versionAttr &&
+            0 == Platform::Strcasecmp(ATTR_VERSION, versionAttr))
         {
+            if (!versionValue || !*versionValue)
+            {
             throw Exception("CTF reader. Invalid Info element version attribute.");
-        }
+            }
 
         int fver = (int)CTF_INFO_ELEMENT_VERSION;
         if (0 == sscanf(versionValue, "%d", &fver))
@@ -775,7 +777,7 @@ void validateInfoElementVersion(const char * versionAttr,
             oss << versionValue << " .";
             throw Exception(oss.str().c_str());
         }
-    }
+        }
 }
 }
 void CTFReaderInfoElt::start(const char ** atts)
@@ -1232,7 +1234,7 @@ void CTFReaderACESElt::start(const char **atts)
 
 bool CTFReaderACESElt::isOpParameterValid(const char * att) const noexcept
 {
-    return CTFReaderOpElt::isOpParameterValid(att) || 
+    return CTFReaderOpElt::isOpParameterValid(att) ||
            0 == Platform::Strcasecmp(ATTR_STYLE, att);
 }
 
@@ -1443,7 +1445,7 @@ void CTFReaderFixedFunctionElt::start(const char **atts)
         {
             std::vector<double> data;
             const char* paramsStr = atts[i + 1];
-            const size_t len = paramsStr ? strlen(paramsStr) : 0;
+            const size_t len = paramsStr ? std::strlen(paramsStr) : 0;
             try
             {
                 data = GetNumbers<double>(paramsStr, len);
@@ -2264,7 +2266,7 @@ void CTFReaderGradingPrimaryParamElt::parseRGBMAttrValues(const char ** atts,
     unsigned i = 0;
     while (atts[i] && *atts[i])
     {
-        const size_t len = strlen(atts[i + 1]);
+        const size_t len = std::strlen(atts[i + 1]);
         std::vector<double> data;
 
         try
@@ -2330,7 +2332,7 @@ void CTFReaderGradingPrimaryParamElt::parseBWAttrValues(const char ** atts,
     unsigned i = 0;
     while (atts[i] && *atts[i])
     {
-        const size_t len = strlen(atts[i + 1]);
+        const size_t len = std::strlen(atts[i + 1]);
         std::vector<double> data;
 
         try
@@ -2390,7 +2392,7 @@ void CTFReaderGradingPrimaryParamElt::parsePivotAttrValues(const char ** atts,
     unsigned i = 0;
     while (atts[i] && *atts[i])
     {
-        const size_t len = strlen(atts[i + 1]);
+        const size_t len = std::strlen(atts[i + 1]);
         std::vector<double> data;
 
         try
@@ -2459,7 +2461,7 @@ void CTFReaderGradingPrimaryParamElt::parseScalarAttrValue(const char ** atts,
     unsigned i = 0;
     while (atts[i] && *atts[i])
     {
-        const size_t len = strlen(atts[i + 1]);
+        const size_t len = std::strlen(atts[i + 1]);
         std::vector<double> data;
 
         try
@@ -2883,7 +2885,7 @@ void CTFReaderGradingToneParamElt::parseRGBMSWAttrValues(const char ** atts,
     unsigned i = 0;
     while (atts[i] && *atts[i])
     {
-        const size_t len = strlen(atts[i + 1]);
+        const size_t len = std::strlen(atts[i + 1]);
         std::vector<double> data;
 
         try
@@ -2981,7 +2983,7 @@ void CTFReaderGradingToneParamElt::parseScalarAttrValue(const char ** atts,
     unsigned i = 0;
     while (atts[i] && *atts[i])
     {
-        const size_t len = strlen(atts[i + 1]);
+        const size_t len = std::strlen(atts[i + 1]);
         std::vector<double> data;
 
         try
@@ -3081,7 +3083,7 @@ void CTFReaderInvLut1DElt::start(const char ** atts)
     CTFReaderOpElt::start(atts);
 
     // The interpolation attribute is optional in CLF/CTF.  The INTERP_DEFAULT
-    // enum indicates that the value was not specified in the file.  When 
+    // enum indicates that the value was not specified in the file.  When
     // writing, this means no interpolation attribute will be added.
     m_invLut->setInterpolation(INTERP_DEFAULT);
 
@@ -3264,7 +3266,7 @@ void CTFReaderInvLut3DElt::start(const char ** atts)
     CTFReaderOpElt::start(atts);
 
     // The interpolation attribute is optional in CLF/CTF.  The INTERP_DEFAULT
-    // enum indicates that the value was not specified in the file.  When 
+    // enum indicates that the value was not specified in the file.  When
     // writing, this means no interpolation attribute will be added.
     m_invLut->setInterpolation(INTERP_DEFAULT);
 
@@ -3507,8 +3509,7 @@ void CTFReaderLogElt_2_0::end()
     {
         if (!isBaseSet())
         {
-            if (getCTFParams().m_style == LogUtil::LOG2 
-                || getCTFParams().m_style == LogUtil::ANTI_LOG2)
+            if (getCTFParams().m_style == LogUtil::LOG2 || getCTFParams().m_style == LogUtil::ANTI_LOG2)
             {
                 setBase(2.0);
             }
@@ -3915,7 +3916,7 @@ void CTFReaderLut1DElt::start(const char ** atts)
     CTFReaderOpElt::start(atts);
 
     // The interpolation attribute is optional in CLF/CTF.  The INTERP_DEFAULT
-    // enum indicates that the value was not specified in the file.  When 
+    // enum indicates that the value was not specified in the file.  When
     // writing, this means no interpolation attribute will be added.
     m_lut->setInterpolation(INTERP_DEFAULT);
 
@@ -4092,7 +4093,7 @@ void CTFReaderLut1DElt_1_4::start(const char ** atts)
     CTFReaderOpElt::start(atts);
 
     // The interpolation attribute is optional in CLF/CTF.  The INTERP_DEFAULT
-    // enum indicates that the value was not specified in the file.  When 
+    // enum indicates that the value was not specified in the file.  When
     // writing, this means no interpolation attribute will be added.
     m_lut->setInterpolation(INTERP_DEFAULT);
 
@@ -4214,7 +4215,7 @@ void CTFReaderLut3DElt::start(const char ** atts)
     CTFReaderOpElt::start(atts);
 
     // The interpolation attribute is optional in CLF/CTF.  The INTERP_DEFAULT
-    // enum indicates that the value was not specified in the file.  When 
+    // enum indicates that the value was not specified in the file.  When
     // writing, this means no interpolation attribute will be added.
     m_lut->setInterpolation(INTERP_DEFAULT);
 
@@ -4914,4 +4915,3 @@ const OpDataRcPtr CTFReaderReferenceElt::getOp() const
 }
 
 } // namespace OCIO_NAMESPACE
-

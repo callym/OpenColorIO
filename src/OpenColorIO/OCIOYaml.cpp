@@ -259,8 +259,8 @@ inline void throwError(const YAML::Node & node,
 {
     std::ostringstream os;
     os << "At line " << (node.Mark().line + 1)
-        << ", '" << node.Tag() << "' parsing failed: " 
-        << msg;
+       << ", '" << node.Tag() << "' parsing failed: "
+       << msg;
 
     throw Exception(os.str().c_str());
 }
@@ -274,8 +274,8 @@ inline void throwValueError(const std::string & nodeName,
 
     std::ostringstream os;
     os << "At line " << (key.Mark().line + 1)
-        << ", the value parsing of the key '" << keyName 
-        << "' from '" << nodeName << "' failed: " << msg;
+       << ", the value parsing of the key '" << keyName
+       << "' from '" << nodeName << "' failed: " << msg;
 
     throw Exception(os.str().c_str());
 }
@@ -288,8 +288,8 @@ inline void throwValueError(const YAML::Node & key,
 
     std::ostringstream os;
     os << "At line " << (key.Mark().line + 1)
-        << ", the value parsing of the key '" << keyName 
-        << "' failed: " << msg;
+       << ", the value parsing of the key '" << keyName
+       << "' failed: " << msg;
 
     throw Exception(os.str().c_str());
 }
@@ -971,10 +971,10 @@ inline void load(const YAML::Node& node, ExponentWithLinearTransformRcPtr& t)
             if (val.size() != 4)
             {
                 std::ostringstream os;
-                os << err 
-                    << "gamma field must be 4 floats. Found '" 
-                    << val.size() 
-                    << "'.";
+                os << err
+                   << "gamma field must be 4 floats. Found '"
+                   << val.size()
+                   << "'.";
                 throw Exception(os.str().c_str());
             }
             const double v[4] = { val[0], val[1], val[2], val[3] };
@@ -999,10 +999,10 @@ inline void load(const YAML::Node& node, ExponentWithLinearTransformRcPtr& t)
             if (val.size() != 4)
             {
                 std::ostringstream os;
-                os << err 
-                    << "offset field must be 4 floats. Found '" 
-                    << val.size() 
-                    << "'.";
+                os << err
+                   << "offset field must be 4 floats. Found '"
+                   << val.size()
+                   << "'.";
                 throw Exception(os.str().c_str());
             }
             const double v[4] = { val[0], val[1], val[2], val[3] };
@@ -1078,7 +1078,7 @@ inline void save(YAML::Emitter& out, ConstExponentWithLinearTransformRcPtr t)
 
     double offset[4];
     t->getOffset(offset);
-    
+
     if (offset[0] == offset[1] && offset[0] == offset[2] && offset[3] == 0.)
     {
         out << YAML::Key << "offset" << YAML::Value << offset[0];
@@ -2192,7 +2192,7 @@ inline void save(YAML::Emitter & out, const char * paramName, const GradingRGBMS
         out << YAML::Value << YAML::Flow << YAML::BeginMap;
         out << YAML::Key << "rgb" << YAML::Value << YAML::Flow << vals;
         out << YAML::Key << "master" << YAML::Value << YAML::Flow << rgbm.m_master;
-        out << YAML::Key << (center ? "center" : "start") << YAML::Value << YAML::Flow 
+        out << YAML::Key << (center ? "center" : "start") << YAML::Value << YAML::Flow
             << rgbm.m_start;
         out << YAML::Key << (pivot ? "pivot" : "width") << YAML::Value << YAML::Flow
             << rgbm.m_width;
@@ -2256,7 +2256,7 @@ inline void load(const YAML::Node& node, GroupTransformRcPtr& t)
                 // throwing an exception.  Should this be a warning, instead?
                 if(!childTransform)
                 {
-                    throwValueError(node.Tag(), iter->first, 
+                    throwValueError(node.Tag(), iter->first,
                                     "Child transform could not be parsed.");
                 }
 
@@ -2925,9 +2925,9 @@ void load(const YAML::Node& node, TransformRcPtr& t)
     if(node.Type() != YAML::NodeType::Map)
     {
         std::ostringstream os;
-        os << "Unsupported Transform type encountered: (" 
-            << node.Type() << ") in OCIO profile. "
-            << "Only Mapping types supported.";
+        os << "Unsupported Transform type encountered: ("
+           << node.Type() << ") in OCIO profile. "
+           << "Only Mapping types supported.";
         throwError(node, os.str());
     }
 
@@ -3495,7 +3495,7 @@ inline void load(const YAML::Node & node, ViewTransformRcPtr & vt)
         os << "The '!<ViewTransform>' content needs to be a map.";
         throwError(node, os.str());
     }
-    
+
     CheckDuplicates(node);
 
     for (Iterator iter = node.begin(); iter != node.end(); ++iter)
@@ -3874,7 +3874,7 @@ inline void load(const YAML::Node & node, FileRulesRcPtr & fr, bool & defaultRul
                     << "pattern & extension '" << pattern << "' '" << extension << "'.";
                 throw Exception(oss.str().c_str());
             }
-            
+
             if (colorspace.empty())
             {
                 std::ostringstream oss;
@@ -4157,9 +4157,9 @@ inline void load(const YAML::Node& node, ConfigRcPtr & config, const char* filen
             os << " '" << filename << "' ";
         }
 
-        os << "is version " << profile_major_version 
-            << "." << profile_minor_version
-            << ". ";
+        os << "is version " << profile_major_version
+           << "." << profile_minor_version
+           << ". ";
 
         os << "This version of the OpenColorIO library (" << GetVersion() << ") ";
         os << "is not able to load that config version.";
@@ -4190,7 +4190,7 @@ inline void load(const YAML::Node& node, ConfigRcPtr & config, const char* filen
             mode = ENV_ENVIRONMENT_LOAD_PREDEFINED;
             if(iter->second.Type() != YAML::NodeType::Map)
             {
-                throwValueError(node.Tag(), iter->first, 
+                throwValueError(node.Tag(), iter->first,
                                 "The value type of key 'environment' needs to be a map.");
             }
             for (Iterator it = iter->second.begin(); it != iter->second.end(); ++it)
@@ -4605,7 +4605,7 @@ inline void load(const YAML::Node& node, ConfigRcPtr & config, const char* filen
         {
             if (iter->second.Type() != YAML::NodeType::Sequence)
             {
-                throwError(iter->second, 
+                throwError(iter->second,
                            "'named_transforms' field needs to be a (- !<NamedTransform>) list.");
             }
 
@@ -4664,7 +4664,7 @@ inline void load(const YAML::Node& node, ConfigRcPtr & config, const char* filen
                 throwError(node, "The config must contain either a Default file rule or "
                                  "the 'default' role.");
             }
-        }        
+        }
         else
         {
             // In order to use Config::getColorSpaceFromFilepath() method for any version of
@@ -4740,7 +4740,7 @@ inline void save(YAML::Emitter & out, const Config & config)
         out << YAML::Key << "environment";
         out << YAML::Value << YAML::BeginMap;
         for(int i = 0; i < config.getNumEnvironmentVars(); ++i)
-        {   
+        {
             const char* name = config.getEnvironmentVarNameByIndex(i);
             out << YAML::Key << name;
             out << YAML::Value << config.getEnvironmentVarDefault(name);
@@ -4926,9 +4926,7 @@ inline void save(YAML::Emitter & out, const Config & config)
     out << YAML::EndMap;
 
     // Virtual Display.
-    const int numVirtualDisplayViews
-        = config.getVirtualDisplayNumViews(VIEW_DISPLAY_DEFINED) 
-        + config.getVirtualDisplayNumViews(VIEW_SHARED);
+    const int numVirtualDisplayViews = config.getVirtualDisplayNumViews(VIEW_DISPLAY_DEFINED) + config.getVirtualDisplayNumViews(VIEW_SHARED);
 
     if (configMajorVersion >= 2 && numVirtualDisplayViews > 0)
     {
@@ -4936,7 +4934,7 @@ inline void save(YAML::Emitter & out, const Config & config)
         out << YAML::Newline;
         out << YAML::Key << "virtual_display";
         out << YAML::Value << YAML::BeginSeq;
-    
+
         for(int idx = 0; idx < config.getVirtualDisplayNumViews(VIEW_DISPLAY_DEFINED); ++idx)
         {
             const char * viewName = config.getVirtualDisplayView(VIEW_DISPLAY_DEFINED, idx);
@@ -4948,7 +4946,7 @@ inline void save(YAML::Emitter & out, const Config & config)
                              config.getVirtualDisplayViewDescription(viewName) };
             save(out, view);
         }
-    
+
         StringUtils::StringVec sharedViews;
         for (int idx = 0; idx < config.getVirtualDisplayNumViews(VIEW_SHARED); ++idx)
         {
@@ -4959,7 +4957,7 @@ inline void save(YAML::Emitter & out, const Config & config)
             out << YAML::VerbatimTag("Views");
             out << YAML::Flow << sharedViews;
         }
-    
+
         out << YAML::EndSeq;
     }
 
@@ -4967,12 +4965,12 @@ inline void save(YAML::Emitter & out, const Config & config)
     out << YAML::Newline;
     out << YAML::Key << "active_displays";
     StringUtils::StringVec active_displays;
-    if(config.getActiveDisplays() != NULL && strlen(config.getActiveDisplays()) > 0)
+    if (config.getActiveDisplays() != NULL && std::strlen(config.getActiveDisplays()) > 0)
         active_displays = SplitStringEnvStyle(config.getActiveDisplays());
     out << YAML::Value << YAML::Flow << active_displays;
     out << YAML::Key << "active_views";
     StringUtils::StringVec active_views;
-    if(config.getActiveViews() != NULL && strlen(config.getActiveViews()) > 0)
+    if (config.getActiveViews() != NULL && std::strlen(config.getActiveViews()) > 0)
         active_views = SplitStringEnvStyle(config.getActiveViews());
     out << YAML::Value << YAML::Flow << active_views;
 

@@ -118,7 +118,7 @@ OCIO_ADD_TEST(Platform, setenv)
         OCIO_CHECK_ASSERT(!env.empty());
 
         OCIO_CHECK_ASSERT(0==std::strcmp(u8"SomeValue", env.c_str()));
-        OCIO_CHECK_EQUAL(strlen(u8"SomeValue"), env.size());
+        OCIO_CHECK_EQUAL(std::strlen(u8"SomeValue"), env.size());
     }
     {
         OCIO::Platform::Setenv(u8"MY_DUMMY_ENV", u8" ");

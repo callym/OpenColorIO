@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright Contributors to the OpenColorIO Project.
 
+#include <cstring>
 #include <sstream>
 
 #include "expat.h"
@@ -83,7 +84,7 @@ protected:
     static bool IsValidStartElement(CDLParser::Impl* pImpl,
                                     const XML_Char *name);
 
-    // Helper methods to handle the start of specific elements. 
+    // Helper methods to handle the start of specific elements.
 
     // Handle the start of a ColorDecisionList element.
     static bool HandleColorDecisionListStartElement(CDLParser::Impl* pImpl,
@@ -185,7 +186,7 @@ std::string CDLParser::Impl::loadHeader(std::istream & istream)
     {
         istream.getline(line, limit);
         header += std::string(line) + " ";
-        sizeProcessed += (unsigned int)strlen(line);
+        sizeProcessed += (unsigned int)std::strlen(line);
     }
 
     istream.clear();
