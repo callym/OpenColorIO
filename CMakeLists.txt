@@ -132,9 +132,9 @@ set(BUILD_TYPE_DEBUG ${_BUILD_TYPE_DEBUG})
 include(Compilers)
 include(CppVersion)
 
-
-###############################################################################
+# ##############################################################################
 # Components to build
+option(OCIO_INSTALL "Set to OFF to disable install targets" ON)
 
 option(BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON)
 option(OCIO_BUILD_APPS "Set to OFF to disable command-line apps" ON)
@@ -349,12 +349,14 @@ configure_package_config_file(
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
+if(OCIO_INSTALL)
 install(
     EXPORT ${PROJECT_NAME}_EXPORTED_TARGETS
     DESTINATION ${OCIO_CONFIG_INSTALL_DIR}
     NAMESPACE ${PROJECT_NAME}::
     FILE ${OCIO_TARGETS_EXPORT_NAME}
 )
+endif()
 
 if (NOT BUILD_SHARED_LIBS)
     # Install custom macros used in the find modules.
